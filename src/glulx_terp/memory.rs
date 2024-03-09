@@ -71,17 +71,24 @@ impl Memory {
         self.start_ram_address.wrapping_add(value)
     }
 
+    pub fn as_cursor(&self) -> Cursor<&Vec<u8>> {
+        Cursor::new(&self.raw)
+    }
+
     // Getters
     pub fn get_u8(&self, pos: u32) -> u8 {
+        // TODO: Error handling
         self[pos as usize]
     }
 
     pub fn get_u16(&self, pos: u32) -> u16 {
+        // TODO: Error handling
         let pos = pos as usize;
         u16::from_be_bytes(self[pos..pos+2].try_into().unwrap())
     }
 
     pub fn get_u32(&self, pos: u32) -> u32 {
+        // TODO: Error handling
         let pos = pos as usize;
         u32::from_be_bytes(self[pos..pos+4].try_into().unwrap())
     }
@@ -96,21 +103,23 @@ impl Memory {
 
     pub fn get_ram_u32(&self, pos: u32) -> u32 {
         self.get_u32(self.add_ram_offset(pos))
-
     }
 
     // Setters
     pub fn set_u8(&mut self, pos: u32, value: u8) {
+        // TODO: Error handling
         let pos = pos as usize;
         self[pos] = value ;
     }
 
     pub fn set_u16(&mut self, pos: u32, value: u16) {
+        // TODO: Error handling
         let pos = pos as usize;
         self[pos..pos+2].copy_from_slice(&value.to_be_bytes());
     }
 
     pub fn set_u32(&mut self, pos: u32, value: u32) {
+        // TODO: Error handling
         let pos = pos as usize;
         self[pos..pos+4].copy_from_slice(&value.to_be_bytes());
     }

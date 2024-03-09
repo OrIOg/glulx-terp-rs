@@ -23,9 +23,11 @@ fn main() -> Result<(), Errors> {
 
     let mut file = File::open(path).map_err(Errors::TargetLoading)?;
 
-    let terp = GlulxTerp::from_reader(&mut file)
+    let mut terp = GlulxTerp::from_reader(&mut file)
         .map_err(Errors::Interpreter)?;
     println!("Successfully loaded target.");
+
+    terp.run();
     
     Ok(())
 }

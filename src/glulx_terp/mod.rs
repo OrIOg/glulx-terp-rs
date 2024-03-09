@@ -1,6 +1,7 @@
 pub mod memory;
+mod operations;
 use std::io::Read;
-use self::memory::{Memory, MemoryError};
+use self::{memory::{Memory, MemoryError}, operations::Operation};
 
 pub struct GlulxTerp {
     memory: Memory,
@@ -11,7 +12,8 @@ pub struct GlulxTerp {
 pub enum Errors {
     IOError(std::io::Error),
     MemoryError(memory::MemoryError),
-    BinRead(binread::Error)
+    BinRead(binread::Error),
+    FetchOperation(String)
 }
 
 impl GlulxTerp {
@@ -50,5 +52,23 @@ impl GlulxTerp {
             memory,
             pc: header.start_func
         })
+    }
+
+    pub fn step(&mut self) -> Result<(), Errors> {
+        print!("{:X}: ", self.pc);
+        let operation = Operation::fetch(&mut self.memory.as_cursor(), self.pc)?;
+        dbg!(operation);
+        todo!("Execute the operation");
+        Ok(())
+    }
+
+    pub fn run(&mut self) {
+        loop {
+            let result = self.step();
+            if let Err(err) = result {
+                eprintln!("{:?}", err);
+                break;
+            }
+        }
     }
 }
